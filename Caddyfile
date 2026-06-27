@@ -1,0 +1,49 @@
+{
+    # Bind the admin API only to localhost inside the container
+    admin localhost:2019
+}
+
+# Site block using the SITE_DOMAIN environment variable, defaulting to loryians.com
+{$SITE_DOMAIN:loryians.com} {
+    # Reverse proxy to the Next.js standalone container
+    reverse_proxy web:3000
+
+    # Enable compression (Zstd and Gzip)
+    encode zstd gzip
+
+    # Production-grade Security Headers
+    header {
+        # Strict-Transport-Security (HSTS) - Enforce HTTPS for 2 years (includes subdomains & preloading)
+        Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+
+        # Prevent clickjacking attacks by disabling embedding in frames
+        X-Frame-Options "DENY"
+
+        # Disable MIME-sniffing
+        X-Content-Type-Options "nosniff"
+
+        # Referrer Policy: Send full URL for same-origin requests, only domain for cross-origin, and nothing for downgrade
+        Referrer-Policy "strict-origin-when-cross-origin"
+
+        # Block access to client-side hardware features and FLoC tracking
+        Permissions-Policy "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+
+        # Cross-Origin Opener Policy to isolate the browsing context
+        Cross-Origin-Opener-Policy "same-origin"
+
+        # Content Security Policy (CSP)
+        # Tailored for this app to support Supabase, Cloudflare Turnstile, and Google Analytics
+        Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com https://www.googletagmanager.com; connect-src 'self' https://aidluyvujokjyffuvmwp.supabase.co https://www.google-analytics.com https://analytics.google.com; img-src 'self' data: https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; frame-src 'self' https://challenges.cloudflare.com; font-src 'self' data:; base-uri 'self'; form-action 'self';"
+    }
+
+    # Structured JSON Logging output to stdout (ideal for Docker log collection)
+    log {
+        output stdout
+        format json
+    }
+}
+
+# Redirect alternate spellings and subdomains to the canonical HTTPS primary domain
+www.loryians.com, loriyians.com, www.loriyians.com {
+    redir https://{$SITE_DOMAIN:loryians.com}{uri} permanent
+}

@@ -1,0 +1,16 @@
+# Loryians
+
+> Minimalist workspace for solo founders and small teams to plan, track, and ship.
+
+## Core Value
+Loryians offers a project management layout focused entirely on developer speed and simplicity. It eliminates bloated navigation, configuration overhead, and multi-step setups to optimize workflow flow.
+
+## Key Features
+- **Minimalist UI**: Clean, focus-driven workspaces.
+- **Effortless Kanban**: Move tasks smoothly and track milestones.
+- **Built for Speed**: Blazing fast rendering and shortcuts.
+
+## Main Links
+- Homepage & Waitlist: https://loryians.com
+- Twitter/X: https://x.com/loryians
+- Contact Email: hello@loryians.com
